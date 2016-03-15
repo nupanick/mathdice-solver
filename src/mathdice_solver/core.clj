@@ -5,10 +5,22 @@
 ;; List of legal ways to combine two numbers in MathDice.
 (def math-functions [+, -, *, /, math/expt])
 
-(defn generate-random-problem []
-  "Generates a random MathDice problem with a target and three key numbers."
-  (cons (apply * (take 2 (repeatedly #(inc (rand-int 12)))))
-        (map inc (take 3 (repeatedly #(inc (rand-int 6)))))))
+(defn roll-d
+  "Produces a lazy sequence of random integers from 1 to n."
+  [n]
+  (repeatedly #(inc (rand-int n))))
+
+(defn generate-random-problem
+  "Generates a random MathDice problem in the format (target die1 die2 die3)."
+  []
+  (cons (apply * (take 2 (roll-d 12)))
+        (take 3 (roll-d 6))))
+
+(defn all-orderings
+  "Creates an set of all unique ways to re-order the inputs."
+  [& args]
+  (if (= (count args) 1)
+      #{[args]}))
 
 (defn -main
   "I don't do a whole lot ... yet."
