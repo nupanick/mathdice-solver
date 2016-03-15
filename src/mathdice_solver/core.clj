@@ -16,16 +16,33 @@
   []
   (cons (apply * (take 2 (roll-d 12)))
         (take 3 (roll-d 6))))
-      
+
 (defn drop-nth
   "Removes the nth element from a collection."
   [sqn n]
   (concat (take n sqn) (drop (inc n) sqn)))
 
+(defn drop-each
+  "Produces a collection of copies of the input, each with a different element removed."
+  [sqn]
+  (map #(drop-nth sqn %)
+       (range (count sqn))))
+
 (defn cons-to-all
   "Exactly what it says on the tin."
   [x, sqns]
   (map #(cons x %) sqns))
+
+(defn permutations
+  "Produces a collection of all possible unique rearrangements of the input sequence."
+  ;; FINALLY.
+  [sqn]
+  (if (= 1 (count sqn))
+      #{sqn}
+      (reduce into #{}
+              (map #(cons-to-all %1 (permutations %2))
+                   sqn
+                   (drop-each sqn)))))
 
 (defn -main
   "I don't do a whole lot ... yet."
