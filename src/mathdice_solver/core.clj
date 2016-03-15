@@ -22,30 +22,10 @@
   [sqn n]
   (concat (take n sqn) (drop (inc n) sqn)))
 
-(defn all-orderings
-  "Creates a set of all ways to re-order the input list."
-  [sqn]
-  (if (= 1 (count sqn))
-      [sqn]
-      (map (fn [n] (map #(cons (nth sqn n) %) (all-orderings (drop-nth sqn n))))
-           (range (count sqn)))))
-
 (defn cons-to-all
   "Exactly what it says on the tin."
   [x, sqns]
   (map #(cons x %) sqns))
-
-(defn better-all-orderings
-  "Creates a set of all ways to re-order the input list."
-  [sqn]
-  (if (empty? sqn)
-      #{}))
-      
-
-(defn combine-two
-  "Creates a list of possible ways to combine two numbers, given a list of functions."
-  [functions n1 n2]
-  (map #(% n1 n2)))
 
 (defn -main
   "I don't do a whole lot ... yet."
