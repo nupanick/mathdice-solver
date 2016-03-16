@@ -3,6 +3,10 @@
   (:require [clojure.math.numeric-tower :as math
              :refer [expt]]))
 
+;;;
+;;; This section deals with producing mathdice problems.
+;;;
+
 ;; List of legal ways to combine two numbers in MathDice.
 (def math-functions [+, -, *, /, math/expt])
 
@@ -17,19 +21,23 @@
   (cons (apply * (take 2 (roll-d 12)))
         (take 3 (roll-d 6))))
 
+;;;
+;;; This section contains functions used to generate potential solutions.
+;;;
+
 (defn drop-nth
-  "Removes the nth element from a collection."
+  "Accepts a sequence, and returns that sequence with the nth element removed."
   [sqn n]
   (concat (take n sqn) (drop (inc n) sqn)))
 
 (defn drop-each
-  "Produces a collection of copies of the input, each with a different element removed."
+  "Accepts a sequence and returns a list of all sequences created by removing one element from it."
   [sqn]
   (map #(drop-nth sqn %)
        (range (count sqn))))
 
 (defn cons-to-all
-  "Exactly what it says on the tin."
+  "Accepts a value and a collection of sequences. Prepends the value to each sequence."
   [x, sqns]
   (map #(cons x %) sqns))
 
@@ -40,6 +48,8 @@
   (if (= 1 (count sqn))
       #{sqn}
       (reduce into #{}
+              ;; Try each possible starting element, followed by all possible
+              ;; permutations of the remaining elements.
               (map #(cons-to-all %1 (permutations %2))
                    sqn
                    (drop-each sqn)))))
