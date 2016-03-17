@@ -50,57 +50,25 @@
 	                 sqn
 	                 (drop-each sqn)))))
 
-(defn permute-remainder
-	"Produces an unordered collection of divisions of the input list into an ordered list of length n and an unordered remainder."
-	[sqn n]
-	(if (<= n 0)
-	    ;; Output format is #{ {:selection (x) :remainder #{}} ... }
-	    (set (hash-map :selection sqn :remainder #{}))
-	    (reduce into #{}
-	            ;; Try each possible starting element, followed by all possible
-	            ;; sequences of length n-1.
-	    ))) ;abandoned method body
-
-(defn pick-two
-	"Lists ways to pick two elements from the set. Special case of permute-n."
-	[sqn]
-	(permute-n sqn 2))
-
-(defn permute
-	"Lists ways to rearrange the set. Special case of permute-n."
-	[sqn]
-	(permute-n sqn (count sqn)))
-
 ;;;
 ;;; Construct all the possible expressions.
 ;;;
 
-;; List of legal ways to combine two numbers in MathDice.
-(def math-functions ['+ '- '* '/ 'expt])
-
-(defn cons-all-to-all [xs sqns]
-  (reduce into #{}
-          (map #(cons-to-all % sqns) xs)))
-
-(defn generate-expressions [functions operands]
-	(if (< (count operands) 2)
-	    operands
-	    ;; screw efficiency at this point, I'm going to use this code for
-	    ;; the whomping n=3 case after all.
-	    (reduce into #{}
-	            (map (fn [func]
-	                     (reduce into #{}
-	                             (map (fn [x y & more]
-	                                      (generate-expressions )))))))))
-
-(defn pluck-two
+(defn pick-two
+  "Produces all ways to pick two elements from a sequence, as well as the remainder after each one."
   [sqn]
   (let [n (count sqn)]
-       (for [i (range n)
-             :let [sqn-i (drop-nth sqn i)]
-             j (range (dec n))
-             :let [sqn-i-j (drop-nth sqn-i j)]]
-           (list (nth sqn i) (nth sqn-i j) sqn-i-j))))
+       (set (for [i (range n)
+                  :let [x (nth sqn i)
+                        sqn-i (drop-nth sqn i)]
+                  j (range (dec n))
+                  :let [y (nth sqn-i j)
+                        sqn-i-j (drop-nth sqn-i j)]]
+                 (list x y sqn-i-j)))))
+
+
+;; List of legal ways to combine two numbers in MathDice.
+(def math-functions ['+ '- '* '/ 'expt])
 
 (defn -main
   "I don't do a whole lot ... yet."
