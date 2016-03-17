@@ -7,9 +7,6 @@
 ;;; This section deals with producing mathdice problems.
 ;;;
 
-;; List of legal ways to combine two numbers in MathDice.
-(def math-functions [+, -, *, /, math/expt])
-
 (defn roll-d
   "Produces a lazy sequence of random integers from 1 to n."
   [n]
@@ -53,6 +50,16 @@
               (map #(cons-to-all %1 (permutations %2))
                    sqn
                    (drop-each sqn)))))
+
+;;;
+;;; Construct all the possible expressions.
+;;;
+
+;; List of legal ways to combine two numbers in MathDice.
+(def math-functions ['+ '- '* '/ 'expt])
+
+(defn generate-expressions [functions [x y]]
+	(into #{} (map #(list % x y) functions)))
 
 (defn -main
   "I don't do a whole lot ... yet."
