@@ -38,19 +38,6 @@
   [x, sqns]
   (map #(cons x %) sqns))
 
-(defn permutations
-  "Produces a collection of all possible unique rearrangements of the input sequence."
-  ;; FINALLY.
-  [sqn]
-  (if (= 1 (count sqn))
-      #{sqn}
-      (reduce into #{}
-              ;; Try each possible starting element, followed by all possible
-              ;; permutations of the remaining elements.
-              (map #(cons-to-all %1 (permutations %2))
-                   sqn
-                   (drop-each sqn)))))
-
 (defn permute-n
 	"Produces a collection of all possible unique sequences of n-many elements of the input sequence."
 	[sqn n]
@@ -62,6 +49,16 @@
 	            (map #(cons-to-all %1 (permute-n %2 (- n 1)))
 	                 sqn
 	                 (drop-each sqn)))))
+
+(defn pick-two
+	"Lists ways to pick two elements from the set. Special case of permute-n."
+	[sqn]
+	(permute-n sqn 2))
+
+(defn permute
+	"Lists ways to rearrange the set. Special case of permute-n."
+	[sqn]
+	(permute-n sqn (count sqn)))
 
 ;;;
 ;;; Construct all the possible expressions.
