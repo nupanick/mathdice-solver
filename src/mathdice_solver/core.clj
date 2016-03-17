@@ -51,6 +51,18 @@
                    sqn
                    (drop-each sqn)))))
 
+(defn permute-n
+	"Produces a collection of all possible unique sequences of n-many elements of the input sequence."
+	[sqn n]
+	(if (= 1 n)
+	    (set (map #(list %) sqn))
+	    (reduce into #{}
+	            ;; Try each possible starting element, followed by all possible
+	            ;; sequences of length n-1.
+	            (map #(cons-to-all %1 (permute-n %2 (- n 1)))
+	                 sqn
+	                 (drop-each sqn)))))
+
 ;;;
 ;;; Construct all the possible expressions.
 ;;;
