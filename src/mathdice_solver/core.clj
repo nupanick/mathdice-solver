@@ -7,6 +7,9 @@
 ;;; This section deals with producing mathdice problems.
 ;;;
 
+;; List of legal ways to combine two numbers in MathDice.
+(def math-functions ['+ '- '* '/ 'expt])
+
 (defn roll-d
   "Produces a lazy sequence of random integers from 1 to n."
   [n]
@@ -66,9 +69,6 @@
                         sqn-i-j (drop-nth sqn-i j)]]
                  (list x y sqn-i-j)))))
 
-;; List of legal ways to combine two numbers in MathDice.
-(def math-functions ['+ '- '* '/ 'expt])
-
 (defn generate-expressions
   "Generate all possible expressions using the given two-operation operators on the given operands."
   [operators operands]
@@ -80,6 +80,24 @@
                   (generate-expressions
                     operators
                     (conj more (list f x y)))))))
+
+(defn unique-outputs [expressions]
+  (reduce #(try (assoc %1 (eval %2) %2) (catch Exception e nil)) {} expressions))
+
+(defn distance [x y]
+  (let [t (- x y)]
+       (if (>= t 0)
+           t
+           (- 1 t))))
+
+(defn best-n [n guesses target]
+  (take n (sort-by #(* 1 (distance % target)) guesses)))
+
+(defn find-solution [[target & dice]]
+  (let [solution-list (unique-outputs (generate-expressions math-functions dice))
+        answer (first (sort-by #(distance % target) (keys solution-list)))]
+      (list answer '= (get solution-list answer))))
+
 
 (defn -main
   "I don't do a whole lot ... yet."
