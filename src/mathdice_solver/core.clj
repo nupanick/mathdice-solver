@@ -66,9 +66,20 @@
                         sqn-i-j (drop-nth sqn-i j)]]
                  (list x y sqn-i-j)))))
 
-
 ;; List of legal ways to combine two numbers in MathDice.
 (def math-functions ['+ '- '* '/ 'expt])
+
+(defn generate-expressions
+  "Generate all possible expressions using the given two-operation operators on the given operands."
+  [operators operands]
+  (if (-> operands count (< 2))
+      (set operands)
+      (reduce into #{}
+              (for [[x y more] (pick-two operands)
+                    f operators]
+                  (generate-expressions
+                    operators
+                    (conj more (list f x y)))))))
 
 (defn -main
   "I don't do a whole lot ... yet."
