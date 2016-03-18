@@ -119,10 +119,18 @@
          (map #(distance % target)
               guesses)))
 
-(defn find-solution [[target & dice]]
+(defn find-solution
+  "Given a mathdice problem, finds the best possible solution. Outputs both the number reached and the expression that produced it."
+  [[target & dice]]
   (let [solution-list (unique-outputs (generate-expressions math-functions dice))
         answer (best-guess (keys solution-list) target)]
-      (list answer '= (get solution-list answer))))
+      (list answer (get solution-list answer))))
+
+;;;
+;;; Okay, now how about some i/o support?
+;;;
+
+
 
 (defn -main
   "I don't do a whole lot ... yet."
