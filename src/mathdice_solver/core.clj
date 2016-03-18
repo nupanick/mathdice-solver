@@ -81,6 +81,13 @@
                     operators
                     (conj more (list f x y)))))))
 
+(defn safe-eval
+  "Return nil on divide by zero error."
+  [expression]
+  (try (eval expression)
+       (catch ArithmeticException e
+              nil)))
+
 (defn unique-outputs [expressions]
   (reduce #(try (assoc %1 (eval %2) %2) (catch Exception e nil)) {} expressions))
 
