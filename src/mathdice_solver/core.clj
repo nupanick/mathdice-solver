@@ -88,8 +88,22 @@
        (catch ArithmeticException e
               nil)))
 
-(defn unique-outputs [expressions]
-  (reduce #(try (assoc %1 (eval %2) %2) (catch Exception e nil)) {} expressions))
+(defn unique-outputs
+  "Create a table of output values and one expression that evaluates to each one."
+  [expressions]
+  (loop [output-map {}
+         [test-exp & more-exps :as expressions] (seq expressions)]
+       (if (empty? expressions)
+           output-map
+           (let [v (safe-eval test-exp)]
+                ;; Remember, v will be nil if test-exp includes division by zero.
+                (if v
+                    (recur
+                      (assoc output-map v test-exp)
+                      more-exps)
+                    (recur
+                      output-map
+                      more-exps))))))
 
 (defn distance [x y]
   (let [t (- x y)]
