@@ -105,14 +105,17 @@
                       output-map
                       more-exps))))))
 
-(defn distance [x y]
-  (let [t (- x y)]
-       (if (>= t 0)
-           t
-           (- 1 t))))
+(defn distance
+  "Returns absolute distance between the two numbers."
+  [x y]
+  (if (< x y)
+      (- y x)
+      (- x y)))
 
-(defn best-n [n guesses target]
-  (take n (sort-by #(* 1 (distance % target)) guesses)))
+(defn best-guess
+  "Returns the element of guesses with the smallest distance to the target."
+  [guesses target]
+  (first (sort-by #(distance % target) guesses)))
 
 (defn find-solution [[target & dice]]
   (let [solution-list (unique-outputs (generate-expressions math-functions dice))
