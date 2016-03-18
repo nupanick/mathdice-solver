@@ -127,10 +127,20 @@
       (list answer (get solution-list answer))))
 
 ;;;
-;;; Okay, now how about some i/o support?
+;;; The remainder of the code will be i/o oriented! Let's talk to the user.
 ;;;
 
-
+(defn infixify
+  "Converts an nested prefix expression into an infix one, for readability."
+  [expression]
+  (if (coll? expression)
+      ;; swap the function into the middle, then recurse on the operands.
+      (list
+        (infixify (second expression))
+        (first expression)
+        (infixify (nth expression 2)))
+      ;; non-nested expressions should just be a flat number
+      expression))
 
 (defn -main
   "I don't do a whole lot ... yet."
