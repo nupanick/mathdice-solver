@@ -115,13 +115,14 @@
 (defn best-guess
   "Returns the element of guesses with the smallest distance to the target."
   [guesses target]
-  (first (sort-by #(distance % target) guesses)))
+  (apply min
+         (map #(distance % target)
+              guesses)))
 
 (defn find-solution [[target & dice]]
   (let [solution-list (unique-outputs (generate-expressions math-functions dice))
-        answer (first (sort-by #(distance % target) (keys solution-list)))]
+        answer (best-guess (keys solution-list) target)]
       (list answer '= (get solution-list answer))))
-
 
 (defn -main
   "I don't do a whole lot ... yet."
