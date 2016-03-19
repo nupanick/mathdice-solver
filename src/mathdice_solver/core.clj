@@ -115,9 +115,10 @@
 (defn best-guess
   "Returns the element of guesses with the smallest distance to the target."
   [guesses target]
-  (apply min
-         (map #(distance % target)
-              guesses)))
+  (let [distance-list (map #(distance % target) guesses)
+        score-table (zipmap distance-list guesses)
+        best-score (apply min distance-list)]
+      (get score-table best-score)))
 
 (defn find-solution
   "Given a mathdice problem, finds the best possible solution. Outputs both the number reached and the expression that produced it."
