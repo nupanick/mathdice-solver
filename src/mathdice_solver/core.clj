@@ -143,7 +143,29 @@
       ;; non-nested expressions should just be a flat number
       expression))
 
+(defn solution-str
+  "Converts a solution object to a display string."
+  [[result process]]
+  (str result
+       " = "
+       (infixify process)))
+
+(defn solve
+  "Simple solution finder for interactive mode."
+  [& args]
+  (-> args
+      find-solution
+      solution-str))
+
 (defn -main
   "I don't do a whole lot ... yet."
-  [& args]
-  (println (str "Here, have a mathdice problem: " (generate-random-problem))))
+  ([] (-main "interactive"))
+  ([arg & others]
+    (if (= arg "solve") nil)
+    ;solvey code
+    (if (= arg "generate")
+        (generate-random-problem))
+    (if (= arg "interactive") nil)
+    ; interactey code
+  ))
+
